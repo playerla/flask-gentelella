@@ -4,6 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 from logging import basicConfig, DEBUG, getLogger, StreamHandler
 from os import path
+from app.forms.routes import blueprint as forms
+from app.ui.routes import blueprint as ui
+from app.home.routes import blueprint as home
+from app.tables.routes import blueprint as tables
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -15,9 +19,12 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
-    for module_name in ('base', 'forms', 'ui', 'home', 'tables', 'data', 'additional', 'base'):
-        module = import_module('app.{}.routes'.format(module_name))
-        app.register_blueprint(module.blueprint)
+    from app.base.routes import blueprint as base
+    app.register_blueprint(forms)
+    app.register_blueprint(ui)
+    app.register_blueprint(home)
+    app.register_blueprint(tables)
+    app.register_blueprint(base)
 
 
 def configure_database(app):
